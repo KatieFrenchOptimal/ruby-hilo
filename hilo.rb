@@ -1,43 +1,41 @@
 #!/usr/bin/env ruby
 
+gameInProgress = true
+lives = 6
+randomNumber = rand(1..100)
+
 puts "Welcome to a game of Ruby Hi-Lo 🤠"
 puts "To win this game correctly guess the random number between 1 and 100"
 puts "You have 6 lives"
-puts "Make a guess:"
 
-currentGame = true
-lives = 6
-randomNum = rand(1..100)
+while gameInProgress
+  puts "Make a guess:"
 
-puts "RANDNUM IS #{randomNum}"
+  guessedNumber = gets.chomp
 
-while currentGame
-  guessedNumber = Integer(gets.chomp)
+  unless guessedNumber =~ /^[1-9][0-9]?$/
+    puts "Input is invalid - please provide a number between 1 and 100."
+    next
+  end
 
-  if guessedNumber == randomNum
+  if guessedNumber.to_i == randomNumber
     puts "💫 ✨ Congratulations! You successfully guessed the correct number! ✨ 💫"
-    currentGame = false
+    break
+  end
+
+  lives -= 1
+
+  if lives === 0
+    puts "💀 💀 💀 Game lost. You have run out of lives 💀 💀 💀"
+    puts "The secret number was: #{randomNumber}"
+    break
+  end
+
+  if guessedNumber.to_i > randomNumber && lives > 0
+    puts "Too high - try again with a lower number."
   else
-    lives -= 1
-
-    if lives > 0
-      puts "You have #{lives} lives remaining. Guess again:"
-    else
-      puts "💀 💀 💀 Game lost. You have run out of lives 💀 💀 💀"
-      puts "The number was: #{randomNum}"
-      currentGame = false
-    end
+    puts "Too low - try again with a higher number."
   end
 
-  begin
-    if guessedNumber > randomNum && lives > 0
-      puts "☹️ That number is too high - try again with a lower number 👇"
-    elsif guessedNumber < randomNum && lives > 0
-      puts "☹️ That number is too low - try again with a higher number 👆"
-    end
-  rescue ArgumentError
-    # this don't work
-    puts "Must be a valid number - do not include letters or special characters."
-    puts "Try again:"
-  end
+  puts "You have #{lives} lives left."
 end
