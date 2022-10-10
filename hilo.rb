@@ -1,46 +1,43 @@
 #!/usr/bin/env ruby
 
-gameWon = false
-lives = 6
-randomNum = rand(1..100)
-
 puts "Welcome to a game of Ruby Hi-Lo 🤠"
 puts "To win this game correctly guess the random number between 1 and 100"
 puts "You have 6 lives"
 puts "Make a guess:"
 
-while !gameWon
-  guessedNumber = gets.chomp.to_i
-  outOfRangeNum = guessedNumber < 1 || guessedNumber > 100
+currentGame = true
+lives = 6
+randomNum = rand(1..100)
 
-  remainingLivesMessage = "You have #{lives} lives remaining. Guess again:"
-  gameOverMessage = "💀 💀 💀 Game lost. You have run out of lives 💀 💀 💀"
+puts "RANDNUM IS #{randomNum}"
 
-  if guessedNumber > randomNum && !outOfRangeNum
-    lives -= 1
+while currentGame
+  guessedNumber = Integer(gets.chomp)
 
-    if lives == 0
-      puts gameOverMessage
-      break
-    else
-      puts "☹️ That number is too high - try again with a lower number 👇"
-      puts remainingLivesMessage
-    end
-  elsif guessedNumber < randomNum && !outOfRangeNum
-    lives -= 1
-
-    if lives == 0
-      puts gameOverMessage
-      break
-    else
-      puts "☹️ That number is too low - try again with a higher number 👆"
-      puts remainingLivesMessage
-    end
-  elsif outOfRangeNum
-    puts "Uh oh - you have guessed a number out of range."
-    puts "Make sure your guess is in the range of 1 - 100. Try again:"
-  else
+  if guessedNumber == randomNum
     puts "💫 ✨ Congratulations! You successfully guessed the correct number! ✨ 💫"
-    gameWon = true
+    currentGame = false
+  else
+    lives -= 1
+
+    if lives > 0
+      puts "You have #{lives} lives remaining. Guess again:"
+    else
+      puts "💀 💀 💀 Game lost. You have run out of lives 💀 💀 💀"
+      puts "The number was: #{randomNum}"
+      currentGame = false
+    end
+  end
+
+  begin
+    if guessedNumber > randomNum && lives > 0
+      puts "☹️ That number is too high - try again with a lower number 👇"
+    elsif guessedNumber < randomNum && lives > 0
+      puts "☹️ That number is too low - try again with a higher number 👆"
+    end
+  rescue ArgumentError
+    # this don't work
+    puts "Must be a valid number - do not include letters or special characters."
+    puts "Try again:"
   end
 end
